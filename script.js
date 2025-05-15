@@ -60,7 +60,7 @@ let sname = document.querySelector(".songinfo");
 let dur = document.querySelector(".songtime");
 
 async function displayFolder() {
-  let a = await fetch(`//songs`);
+  let a = await fetch(`songs`);
   let response = await a.text();
   let div = document.createElement("div");
   div.innerHTML = response;
@@ -69,15 +69,15 @@ async function displayFolder() {
   let array = Array.from(anchors);
   for (let index = 0; index < array.length; index++) {
     const item = array[index];
-    if (item.href.includes("/songs/")) {
+    if (item.href.includes("songs/")) {
       let folderval = item.href.split("/").slice(-1)[0];
-      let a = await fetch(`/songs/${folderval}/info.json`);
+      let a = await fetch(`songs/${folderval}/info.json`);
       let response = await a.json();
       cardContainer.innerHTML += `<div data-folder="${folderval}" class="card p-2 bg-normal">
                         <div class="play flex justify-center items-center p-2">
                             <img src="/images/play.png" alt="Play" class="play-logo logo">
                         </div>
-                        <img src="/songs/${folderval}/cover.png" alt="" class="playlist-img">
+                        <img src="songs/${folderval}/cover.png" alt="" class="playlist-img">
                         <h3>${response.title}</h3>
                         <p>${response.description}</p>
                     </div>`;
