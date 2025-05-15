@@ -11,12 +11,12 @@ function convertToMinutesSeconds(totalSeconds) {
 
 async function getSongs(folder) {
   currFolder = folder;
-  let a = await fetch(`\\${folder}`);
+  let a = await fetch(`public/${folder}`);
   let response = await a.text();
   let div = document.createElement("div");
   div.innerHTML = response;
   let as = div.getElementsByTagName("a");
-  let val = await fetch(`\\${folder}/info.json`);
+  let val = await fetch(`public/${folder}/info.json`);
   let valjson = await val.json();
   let playlistDetail = document.getElementById("playlist-detail");
   playlistDetail.innerHTML = valjson.title;
@@ -24,7 +24,7 @@ async function getSongs(folder) {
   for (let i = 0; i < as.length; i++) {
     const element = as[i];
     if (element.href.endsWith(".mp3") || element.href.endsWith(".m4a")) {
-      songs.push(element.href.split(`/${folder}/`)[1]);
+      songs.push(element.href.split(`${folder}/`)[1]);
     }
   }
   let songUL = document
@@ -34,12 +34,12 @@ async function getSongs(folder) {
   for (const song of songs) {
     let songhtml = `<li data-song="${song}">
                       <div class="info flex p-1 items-center justify-between">
-                        <img class="invert songimg" src="images/music.svg" alt="Music">
+                        <img class="invert songimg" src="public/images/music.svg" alt="Music">
                         <div class="songinfo flex justify-content">
                           <h5>${decodeURIComponent(song).split(".")[0]}</h5>
                           <p>${decodeURIComponent(song).split(".")[1]}</p>
                         </div>
-                        <img src="images/play.png" alt="" class="invert icons">
+                        <img src="public/images/play.png" alt="" class="invert icons">
                       </div>
                     </li>`;
     songUL.innerHTML += songhtml;
@@ -60,7 +60,7 @@ let sname = document.querySelector(".songinfo");
 let dur = document.querySelector(".songtime");
 
 async function displayFolder() {
-  let a = await fetch(`\\songs`);
+  let a = await fetch(`/public/songs`);
   let response = await a.text();
   let div = document.createElement("div");
   div.innerHTML = response;
@@ -71,13 +71,13 @@ async function displayFolder() {
     const item = array[index];
     if (item.href.includes("/songs/")) {
       let folderval = item.href.split("/").slice(-1)[0];
-      let a = await fetch(`\\songs/${folderval}/info.json`);
+      let a = await fetch(`public/songs/${folderval}/info.json`);
       let response = await a.json();
       cardContainer.innerHTML += `<div data-folder="${folderval}" class="card p-2 bg-normal">
                         <div class="play flex justify-center items-center p-2">
-                            <img src="images/play.png" alt="Play" class="play-logo logo">
+                            <img src="public/images/play.png" alt="Play" class="play-logo logo">
                         </div>
-                        <img src="songs/${folderval}/cover.png" alt="" class="playlist-img">
+                        <img src="public/songs/${folderval}/cover.png" alt="" class="playlist-img">
                         <h3>${response.title}</h3>
                         <p>${response.description}</p>
                     </div>`;
@@ -92,12 +92,12 @@ async function displayFolder() {
 }
 
 const playMusic = (track, pause = false) => {
-  audio.src = `/${currFolder}/` + track;
+  audio.src = `public/${currFolder}/` + track;
   audio.volume = document.getElementsByTagName("input")[0].value / 100;
   if (!pause) {
     audio.play();
 
-    playimg.src = "images/pause.svg";
+    playimg.src = "public/images/pause.svg";
   }
   sname.innerHTML = decodeURI(
     track.replaceAll("%20", " ").replaceAll("%2C", ",").split(".")[0]
@@ -112,10 +112,10 @@ async function main() {
   play.addEventListener("click", () => {
     if (audio.paused) {
       audio.play();
-      playimg.src = "images/pause.svg";
+      playimg.src = "public/images/pause.svg";
     } else {
       audio.pause();
-      playimg.src = "images/play.png";
+      playimg.src = "public/images/play.png";
     }
   });
   audio.addEventListener("timeupdate", () => {
@@ -216,12 +216,12 @@ async function main() {
     .getElementsByTagName("img")[0];
   mutebtn.addEventListener("click", () => {
     if (audio.volume == 0) {
-      mutebtn.src = "images/volume.svg";
+      mutebtn.src = "public/images/volume.svg";
       audio.volume = 1 / 2;
       vol.value = 50;
     } else {
       audio.volume = 0;
-      mutebtn.src = "images/mute.svg";
+      mutebtn.src = "public/images/mute.svg";
       vol.value = 0;
     }
   });
